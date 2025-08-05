@@ -40,7 +40,7 @@ export class TaskController {
         projectId.toString(),
         task.getId!.toString()
       );
-      res.status(201).json(task);
+      res.status(201).json({ message: "Task created successfuly", task });
     } catch (error) {
       res.status(500).json({ error: "Error to create task" });
     }
@@ -79,7 +79,7 @@ export class TaskController {
     try {
       const updatedTask = new Task(name, description);
       const task = await this.taskService.updateTask(taskId, updatedTask);
-      
+
       res.json(task);
     } catch (error) {
       res.status(500).json({ error: "Error to update the task of projects" });

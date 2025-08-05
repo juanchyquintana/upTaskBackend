@@ -14,7 +14,7 @@ export function projectExists(projectService: ProjectService) {
     try {
       const { projectId } = req.params;
 
-      const projectFound = await projectService.getProjectById(projectId);
+      const projectFound = await projectService.getProjectInstanceById(projectId);
       if (!projectFound) {
         res.status(404).json({ error: "Project not found" });
         return;

@@ -58,7 +58,37 @@ export class ProjectService {
   }
 
   // Get by ID
-  async getProjectById(id: string): Promise<Project | null> {
+  async getProjectById(id: string): Promise<ProjectDTO | null> {
+    const project = await ProjectModel.findById(id).populate("tasks");
+    if (!project) {
+      return null;
+    }
+
+    const tasks = Array.isArray(project.tasks)
+      ? project.tasks.map((task: any) => ({
+          _id: task._id.toString(),
+          name: task._name?.toString() ?? task.name?.toString() ?? "",
+          description:
+            task._description?.toString() ?? task.description?.toString() ?? "",
+          project: task._project?.toString() ?? task.project?.toString() ?? "",
+          status: (
+            task._status?.toString() ??
+            task.status?.toString() ??
+            ""
+          ).trim(),
+        }))
+      : [];
+
+    return {
+      _id: project._id.toString(),
+      projectName: project.projectName.toString(),
+      clientName: project.clientName.toString(),
+      description: project.description.toString(),
+      tasks,
+    };
+  }
+
+  async getProjectInstanceById(id: string): Promise<Project | null> {
     const project = await ProjectModel.findById(id).populate("tasks");
     if (!project) {
       return null;
@@ -71,7 +101,7 @@ export class ProjectService {
               task.name,
               task.description,
               task.project,
-              task.id,
+              (id = task.id),
               task.status
             )
         )
@@ -82,7 +112,7 @@ export class ProjectService {
       clientName: project.clientName.toString(),
       description: project.description.toString(),
       id: project._id.toString(),
-      tasks: [], // o tasks si querés incluirlas
+      tasks: tasks, // o tasks si querés incluirlas
     });
   }
 
@@ -114,7 +144,7 @@ export class ProjectService {
       clientName: project.clientName.toString(),
       description: project.description.toString(),
       id: project._id.toString(),
-      tasks: [], 
+      tasks: [],
     });
   }
 

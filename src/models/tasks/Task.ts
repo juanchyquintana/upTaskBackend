@@ -72,4 +72,14 @@ export class Task {
   set setProject(value: Types.ObjectId) {
     this._project = value;
   }
+
+    toJSON() {
+    return {
+      _id: this._id,
+      name: this.getName,
+      description: this.getDescription,
+      status: this.getStatus,
+      project: this.getProject,
+    };
+  }
 }
